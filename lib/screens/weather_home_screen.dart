@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 class WeatherHomeScreen extends StatefulWidget {
   @override
@@ -6,6 +7,12 @@ class WeatherHomeScreen extends StatefulWidget {
 }
 
 class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
+  void getLocation() async {
+    Position position = await Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.medium);
+    print(position);
+  }
+
   Widget _buildForecast(int index) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 25.0),
@@ -25,7 +32,9 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).primaryColor,
         child: Icon(Icons.add),
-        onPressed: () => print('Navigate to city selector'),
+        onPressed: () {
+          getLocation();
+        },
       ),
       body: ListView.builder(
         padding: EdgeInsets.symmetric(vertical: 80.0),
