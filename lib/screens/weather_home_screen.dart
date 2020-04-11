@@ -33,7 +33,7 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
         backgroundColor: Theme.of(context).primaryColor,
         child: Icon(Icons.add),
         onPressed: () {
-          getLocation();
+          // TODO use this to goto another page to add another city.
         },
       ),
       body: ListView.builder(
