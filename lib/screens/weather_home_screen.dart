@@ -1,12 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:hello_weather/screens/loading_screen.dart';
 
 class WeatherHomeScreen extends StatefulWidget {
+  WeatherHomeScreen({this.locationWeather});
+
+  final locationWeather;
+
   @override
   _WeatherHomeScreenState createState() => _WeatherHomeScreenState();
 }
 
 class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
+  //properties
+  int temperature;
+  double temp;
+  String main;
+  String description;
+  String cityName;
+
+  @override
+  void initState() {
+    super.initState();
+    updateUI(widget.locationWeather);
+  }
+
+  void updateUI(dynamic weatherData) {
+    temp = weatherData['main']['temp'];
+    temperature = temp.toInt();
+    main = weatherData['weather'][0]['main'];
+    description = weatherData['weather'][0]['description'];
+    cityName = weatherData['name'];
+  }
+
   void getLocation() async {
     Position position = await Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.medium);
@@ -55,7 +81,7 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                   ),
                   SizedBox(height: 10.0),
                   Text(
-                    'Currently 28 and Sunny',
+                    'Currently $temperature°, $main and $description',
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 20.0,
@@ -73,7 +99,3 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
     );
   }
 }
-
-// double temperature = decodedData['main']['temp'];
-// int condition = decodedData['weather'][0]['id'];
-// String cityName = decodedData['name'];
