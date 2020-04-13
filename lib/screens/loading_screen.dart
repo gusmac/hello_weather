@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hello_weather/screens/location.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:hello_weather/screens/weather_home_screen.dart';
+import 'package:hello_weather/services/networking.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+const apiKey = '976e3e57f3839084e5e766d9a51813a5';
 
 class LoadingScreen extends StatefulWidget {
   @override
@@ -9,43 +12,41 @@ class LoadingScreen extends StatefulWidget {
 }
 
 class _LoadingScreenState extends State<LoadingScreen> {
+  double latitude;
+  double longitude;
+
   @override
   void initState() {
     super.initState();
-    getLocation();
+    getLocationData();
   }
 
-  void getLocation() async {
+  void getLocationData() async {
     Location location = Location();
+
     await location.getCurrentLocation();
-    print(location.latitude);
-    print(location.longitude);
-  }
 
-  void getData() async {
-    http.Response response = await http.get(
-        'https://samples.openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=439d4b804bc8187953eb36d2a8c26a02');
+    latitude = location.latitude;
+    longitude = location.longitude;
 
-    if (response.statusCode == 200) {
-      String data = response.body;
+    NetworkHelper networkHelper = NetworkHelper(
+        'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$apiKey');
 
-      var decodedData = jsonDecode(data);
-
-      double temperature = decodedData['main']['temp'];
-      int condition = decodedData['weather'][0]['id'];
-      String cityName = decodedData['name'];
-
-      print(temperature);
-      print(condition);
-      print(cityName);
-    } else {
-      print(response.statusCode);
-    }
+    var weatherData = await networkHelper.getData();
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return WeatherHomeScreen();
+    }));
   }
 
   @override
   Widget build(BuildContext context) {
-    getData();
-    return Scaffold();
+    return Scaffold(
+      body: Center(
+        child: SpinKitDoubleBounce(
+          color: Colors.blueGrey,
+          size: 80.0,
+        ),
+      ),
+    );
   }
 }
