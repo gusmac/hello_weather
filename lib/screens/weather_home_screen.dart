@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hello_weather/screens/city_screen.dart';
-import 'package:hello_weather/screens/loading_screen.dart';
-import 'package:hello_weather/services/weather_icon.dart';
 
 class WeatherHomeScreen extends StatefulWidget {
   WeatherHomeScreen({this.locationWeather});
@@ -76,7 +74,6 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
         backgroundColor: Theme.of(context).primaryColor,
         child: Icon(Icons.add),
         onPressed: () {
-          // TODO use this to goto another page to add another city.
           Navigator.push(
             context,
             MaterialPageRoute(
