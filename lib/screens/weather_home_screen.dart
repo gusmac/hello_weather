@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:hello_weather/screens/city_screen.dart';
 import 'package:hello_weather/screens/loading_screen.dart';
+import 'package:hello_weather/services/weather_icon.dart';
 
 class WeatherHomeScreen extends StatefulWidget {
   WeatherHomeScreen({this.locationWeather});
@@ -16,8 +18,11 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
   int temperature;
   double temp;
   String main;
+  String icon;
   String description;
   String cityName;
+  int pressure;
+  String iconurl;
 
   @override
   void initState() {
@@ -26,11 +31,23 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
   }
 
   void updateUI(dynamic weatherData) {
-    temp = weatherData['main']['temp'];
-    temperature = temp.toInt();
-    main = weatherData['weather'][0]['main'];
-    description = weatherData['weather'][0]['description'];
-    cityName = weatherData['name'];
+    setState(() {
+      if (weatherData == null) {
+        temperature = 0;
+        icon = 'Error';
+        description = 'Unable to get weatehr data';
+        cityName = '';
+        return;
+      }
+      temp = weatherData['main']['temp'];
+      temperature = temp.toInt();
+      main = weatherData['weather'][0]['main'];
+      icon = weatherData['weather'][0]['icon'];
+      iconurl = "http://openweathermap.org/img/w/" + icon + ".png";
+      description = weatherData['weather'][0]['description'];
+      cityName = weatherData['name'];
+      pressure = weatherData['main']['pressure'];
+    });
   }
 
   void getLocation() async {
@@ -60,6 +77,14 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
         child: Icon(Icons.add),
         onPressed: () {
           // TODO use this to goto another page to add another city.
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return CityScreen();
+              },
+            ),
+          );
         },
       ),
       body: ListView.builder(
@@ -73,7 +98,7 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'My City',
+                    '$cityName',
                     style: TextStyle(
                         color: Colors.black,
                         fontSize: 40.0,
@@ -86,7 +111,8 @@ class _WeatherHomeScreenState extends State<WeatherHomeScreen> {
                         color: Colors.black,
                         fontSize: 20.0,
                         fontWeight: FontWeight.w700),
-                  )
+                  ),
+                  Image.network(iconurl),
                 ],
               ),
             );
