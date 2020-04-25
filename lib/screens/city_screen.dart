@@ -26,6 +26,21 @@ class _CityScreenState extends State<CityScreen> {
           Container(
             padding: EdgeInsets.all(10.0),
             child: TextField(
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                icon: Icon(Icons.home, color: Colors.blueGrey),
+                hintText: 'Enter City Name',
+                hintStyle: TextStyle(
+                  color: Colors.black,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(8.0),
+                  ),
+                  borderSide: BorderSide.none,
+                ),
+              ),
               style: TextStyle(
                 color: Colors.black,
               ),
@@ -38,6 +53,9 @@ class _CityScreenState extends State<CityScreen> {
             onPressed: () {
               Navigator.pop(context, cityName);
             },
+            color: Colors.blueGrey,
+            textColor: Colors.white,
+            padding: EdgeInsets.all(8.0),
             child: Text(
               'Get Weather',
             ),
